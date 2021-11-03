@@ -36,6 +36,8 @@ resource "aws_iam_role_policy" "valtix_controller_policy" {
           "apigateway:GET",
           "ec2:*",
           "elasticloadbalancing:*",
+          "logs:*",
+          "route53resolver:*",
           "servicequotas:GetServiceQuota"
         ],
         Effect   = "Allow",

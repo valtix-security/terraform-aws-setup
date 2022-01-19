@@ -25,28 +25,28 @@ variable "s3_bucket" {
 
 variable "object_duration" {
   description = "Duration (in days) after which the objects in the s3 bucket are deleted"
-  default = 1
+  default     = 1
 }
 
 variable "aws_credentials_profile" {
   description = "AWS Credentials Profil Name"
-  default = ""
+  default     = ""
 }
 
 variable "aws_access_key" {
   description = "AWS Access Key"
-  default = ""
+  default     = ""
 }
 
 variable "aws_secret_key" {
   description = "AWS Secret Key"
-  default = ""
+  default     = ""
 }
 
 variable "spoke_vpc_tags" {
   description = "Spoke VPC filters to find VPCs for which DNS query logs and VPC flow logs are enabled"
-  type = map(string)
+  type        = map(string)
   default = {
-    "Name": "vpc-1"
+    "Name" : "vpc-1"
   }
 }

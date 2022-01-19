@@ -33,12 +33,18 @@ resource "aws_iam_role_policy" "valtix_controller_policy" {
     Statement = [
       {
         Action = [
+          "acm:ListCertificates",
           "apigateway:GET",
           "ec2:*",
           "elasticloadbalancing:*",
+          "iam:ListPolicies",
+          "iam:ListRoles",
+          "iam:ListRoleTags",
           "logs:*",
           "route53resolver:*",
-          "servicequotas:GetServiceQuota"
+          "servicequotas:GetServiceQuota",
+          "s3:ListAllMyBuckets",
+          "s3:ListBucket"
         ],
         Effect   = "Allow",
         Resource = "*"

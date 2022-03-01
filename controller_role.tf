@@ -44,7 +44,12 @@ resource "aws_iam_role_policy" "valtix_controller_policy" {
           "route53resolver:*",
           "servicequotas:GetServiceQuota",
           "s3:ListAllMyBuckets",
-          "s3:ListBucket"
+          "s3:ListBucket",
+          "events:PutRule",
+          "events:PutTargets",
+          "events:DeleteRule",
+          "events:RemoveTargets",
+          "events:ListTargetsByRule"
         ],
         Effect   = "Allow",
         Resource = "*"

@@ -1,5 +1,3 @@
-
-# create a role that will be used by valtix controller with permissions
 resource "aws_iam_role" "valtix_controller_role" {
   name = "${var.prefix}-controller-role"
 
@@ -36,6 +34,11 @@ resource "aws_iam_role_policy" "valtix_controller_policy" {
           "acm:ListCertificates",
           "apigateway:GET",
           "ec2:*",
+          "events:PutRule",
+          "events:PutTargets",
+          "events:DeleteRule",
+          "events:RemoveTargets",
+          "events:ListTargetsByRule",
           "elasticloadbalancing:*",
           "iam:ListPolicies",
           "iam:ListRoles",
@@ -51,38 +54,54 @@ resource "aws_iam_role_policy" "valtix_controller_policy" {
       },
       {
         Action = [
-          "s3:GetObject"
-        ],
-        Effect = "Allow",
-        Resource = [
-          "${aws_s3_bucket.valtix_s3_bucket.arn}/*"
-        ]
-      },
-      {
-        Action = [
           "iam:GetRole",
           "iam:ListRolePolicies",
           "iam:GetRolePolicy"
         ],
         Effect = "Allow",
         Resource = [
-          aws_iam_role.valtix_controller_role.arn
+          aws_iam_role.valtix_controller_role.arn,
+          aws_iam_role.valtix_inventory_role.arn,
+          aws_iam_role.valtix_fw_role.arn
         ]
       },
       {
         Action = [
-          "iam:GetRole",
-          "iam:ListRolePolicies",
-          "iam:GetRolePolicy",
           "iam:PassRole"
         ],
-        Effect   = "Allow",
-        Resource = aws_iam_role.valtix_fw_role.arn
+        Effect = "Allow",
+        Resource = [
+          aws_iam_role.valtix_fw_role.arn
+        ]
       },
       {
         Action   = "iam:CreateServiceLinkedRole",
         Effect   = "Allow",
         Resource = "arn:aws:iam::*:role/aws-service-role/*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy" "s3_get_object" {
+  for_each = local.s3_bucket
+  name     = "${var.prefix}_s3_get_object"
+  role     = aws_iam_role.valtix_controller_role.id
+  depends_on = [
+    aws_s3_bucket.valtix_s3_bucket
+  ]
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Action = [
+          "s3:GetObject"
+        ],
+        Effect = "Allow",
+        Resource = [
+          "${aws_s3_bucket.valtix_s3_bucket[each.key].arn}/*"
+        ]
       }
     ]
   })

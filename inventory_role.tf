@@ -1,4 +1,4 @@
-resource "aws_iam_role" "valtix_cloudwatch_event_role" {
+resource "aws_iam_role" "valtix_inventory_role" {
   name = "${var.prefix}-inventory-role"
 
   tags = {
@@ -20,9 +20,9 @@ resource "aws_iam_role" "valtix_cloudwatch_event_role" {
   })
 }
 
-resource "aws_iam_role_policy" "valtix_cloudwatch_event_policy" {
-  name = "${var.prefix}-cloudwatch-event-policy"
-  role = aws_iam_role.valtix_cloudwatch_event_role.id
+resource "aws_iam_role_policy" "valtix_inventory_policy" {
+  name = "${var.prefix}-inventory-policy"
+  role = aws_iam_role.valtix_inventory_role.id
 
   policy = jsonencode({
     Version = "2012-10-17",

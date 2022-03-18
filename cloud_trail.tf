@@ -1,6 +1,7 @@
-resource "aws_cloudtrail" "valti_cloudtrail" {
+resource "aws_cloudtrail" "valtix_cloudtrail" {
+  for_each                      = local.s3_bucket
   name                          = "${var.prefix}-cloudtrail"
-  s3_bucket_name                = aws_s3_bucket.valtix_s3_bucket.id
+  s3_bucket_name                = aws_s3_bucket.valtix_s3_bucket[each.key].id
   enable_log_file_validation    = true
   is_multi_region_trail         = true
   include_global_service_events = true

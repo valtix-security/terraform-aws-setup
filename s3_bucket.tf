@@ -1,16 +1,30 @@
+locals {
+  # if s3 bucket is not provided then don't create. Use map to make this check and everything else that depends on the s3
+  s3_bucket = { for bkt in [var.s3_bucket] : bkt => "dontcare" if bkt != "" }
+}
+
 resource "aws_s3_bucket" "valtix_s3_bucket" {
-  bucket        = var.s3_bucket
+  for_each      = local.s3_bucket
+  bucket        = each.key
   force_destroy = true
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        sse_algorithm = "AES256"
-      }
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "encryption" {
+  for_each = local.s3_bucket
+  bucket   = aws_s3_bucket.valtix_s3_bucket[each.key].id
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
     }
   }
-  lifecycle_rule {
-    id      = "Delete Objects after ${var.object_duration} days"
-    enabled = true
+}
+
+resource "aws_s3_bucket_lifecycle_configuration" "lifecycle" {
+  for_each = local.s3_bucket
+  bucket   = aws_s3_bucket.valtix_s3_bucket[each.key].id
+  rule {
+    id     = "Delete Objects after ${var.object_duration} days"
+    status = "Enabled"
     expiration {
       days = var.object_duration
     }
@@ -18,7 +32,8 @@ resource "aws_s3_bucket" "valtix_s3_bucket" {
 }
 
 resource "aws_s3_bucket_public_access_block" "block_public_access" {
-  bucket                  = aws_s3_bucket.valtix_s3_bucket.id
+  for_each                = local.s3_bucket
+  bucket                  = aws_s3_bucket.valtix_s3_bucket[each.key].id
   block_public_acls       = true
   block_public_policy     = true
   ignore_public_acls      = true
@@ -26,7 +41,8 @@ resource "aws_s3_bucket_public_access_block" "block_public_access" {
 }
 
 resource "aws_s3_bucket_policy" "valtix_s3_bucket_policy" {
-  bucket = aws_s3_bucket.valtix_s3_bucket.id
+  for_each = local.s3_bucket
+  bucket   = aws_s3_bucket.valtix_s3_bucket[each.key].id
   depends_on = [
     aws_s3_bucket_public_access_block.block_public_access
   ]
@@ -38,7 +54,7 @@ resource "aws_s3_bucket_policy" "valtix_s3_bucket_policy" {
       {
         Action   = "s3:GetBucketAcl",
         Effect   = "Allow",
-        Resource = aws_s3_bucket.valtix_s3_bucket.arn,
+        Resource = aws_s3_bucket.valtix_s3_bucket[each.key].arn,
         Principal = {
           Service = "cloudtrail.amazonaws.com"
         }
@@ -46,7 +62,7 @@ resource "aws_s3_bucket_policy" "valtix_s3_bucket_policy" {
       {
         Action   = "s3:PutObject",
         Effect   = "Allow",
-        Resource = "${aws_s3_bucket.valtix_s3_bucket.arn}/AWSLogs/${data.aws_caller_identity.current.account_id}/*",
+        Resource = "${aws_s3_bucket.valtix_s3_bucket[each.key].arn}/AWSLogs/${data.aws_caller_identity.current.account_id}/*",
         Principal = {
           Service = "cloudtrail.amazonaws.com"
         },
@@ -59,7 +75,7 @@ resource "aws_s3_bucket_policy" "valtix_s3_bucket_policy" {
       {
         Action   = "s3:GetBucketAcl",
         Effect   = "Allow",
-        Resource = aws_s3_bucket.valtix_s3_bucket.arn,
+        Resource = aws_s3_bucket.valtix_s3_bucket[each.key].arn,
         Principal = {
           Service = "delivery.logs.amazonaws.com"
         }
@@ -67,7 +83,7 @@ resource "aws_s3_bucket_policy" "valtix_s3_bucket_policy" {
       {
         Action   = "s3:PutObject",
         Effect   = "Allow",
-        Resource = "${aws_s3_bucket.valtix_s3_bucket.arn}/AWSLogs/${data.aws_caller_identity.current.account_id}/*",
+        Resource = "${aws_s3_bucket.valtix_s3_bucket[each.key].arn}/AWSLogs/${data.aws_caller_identity.current.account_id}/*",
         Principal = {
           Service = "delivery.logs.amazonaws.com"
         },
@@ -82,13 +98,12 @@ resource "aws_s3_bucket_policy" "valtix_s3_bucket_policy" {
 }
 
 resource "aws_s3_bucket_notification" "valtix_s3_bucket_notification" {
-  bucket = aws_s3_bucket.valtix_s3_bucket.id
-
+  for_each = local.s3_bucket
+  bucket   = aws_s3_bucket.valtix_s3_bucket[each.key].id
   queue {
     queue_arn = "arn:aws:sqs:${var.region}:${var.controller_aws_account_number}:inventory_logs_queue_${var.deployment_name}_${var.region}"
     events    = ["s3:ObjectCreated:*"]
   }
-
   # to make the destroy go in sequence, otherwise you get "conflicting operation" errors
   depends_on = [
     aws_s3_bucket_policy.valtix_s3_bucket_policy

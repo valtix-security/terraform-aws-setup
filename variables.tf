@@ -1,9 +1,11 @@
 variable "region" {
-  description = "AWS Region"
+  description = "AWS Region, required only when being run as root module"
+  default     = ""
 }
 
 variable "valtix_api_key_file" {
-  description = "Valtix API Key json file name downloaded from the Valtix Dashboard"
+  description = "Valtix API Key json file name downloaded from the Valtix Dashboard, required only when being run as root module"
+  default     = ""
 }
 
 variable "deployment_name" {
@@ -21,6 +23,7 @@ variable "controller_aws_account_number" {
 
 variable "s3_bucket" {
   description = "Create S3 Bucket to store cloudtrail, route53 query logs and vpc flow logs"
+  default     = ""
 }
 
 variable "object_duration" {
@@ -29,24 +32,16 @@ variable "object_duration" {
 }
 
 variable "aws_credentials_profile" {
-  description = "AWS Credentials Profil Name"
+  description = "AWS Credentials Profile Name, required only when run as root module"
   default     = ""
 }
 
-variable "aws_access_key" {
-  description = "AWS Access Key"
-  default     = ""
+variable "valtix_aws_cloud_account_name" {
+  description = "Name to use for AWS Account on the Valtix Dashboard (Valtix Controller)"
 }
 
-variable "aws_secret_key" {
-  description = "AWS Secret Key"
-  default     = ""
-}
-
-variable "spoke_vpc_tags" {
-  description = "Spoke VPC filters to find VPCs for which DNS query logs and VPC flow logs are enabled"
-  type        = map(string)
-  default = {
-    "Name" : "vpc-1"
-  }
+variable "inventory_regions" {
+  description = "Regions that Valtix Controller can monitor and update the inventory for dynamic security policies: us-east-1, us-east-2"
+  default     = []
+  type        = list(string)
 }

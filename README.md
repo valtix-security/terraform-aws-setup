@@ -7,7 +7,6 @@ Create IAM roles and prepare your AWS account to enable Valtix Controller access
 
 ## Argument Reference
 
-* `region` - (Required) AWS region (required only when run as root module)
 * `valtix_api_key_file` - (Required) Valtix API Key JSON file downloaded from the Valtix Dashboard
 * `deployment_name` - (Required) Valtix Deployment Name provided by Valtix
 * `prefix` - (Required) Prefix added to all the resources created on the AWS account
@@ -46,7 +45,7 @@ To use this repo as a terraform module, remove provider.tf file or comment out t
 
 ### Top level module (In directory at the same level as this repo)
 
-```
+```hcl
 terraform {
   required_providers {
     valtix = {
@@ -59,7 +58,6 @@ terraform {
 }
 
 provider "aws" {
-  region  = "us-east-1"
   profile = "profilename"
 }
 

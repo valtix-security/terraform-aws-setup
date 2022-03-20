@@ -101,7 +101,7 @@ resource "aws_s3_bucket_notification" "valtix_s3_bucket_notification" {
   for_each = local.s3_bucket
   bucket   = aws_s3_bucket.valtix_s3_bucket[each.key].id
   queue {
-    queue_arn = "arn:aws:sqs:${var.region}:${var.controller_aws_account_number}:inventory_logs_queue_${var.deployment_name}_${var.region}"
+    queue_arn = "arn:aws:sqs:${data.aws_region.current.name}:${var.controller_aws_account_number}:inventory_logs_queue_${var.deployment_name}_${data.aws_region.current.name}"
     events    = ["s3:ObjectCreated:*"]
   }
   # to make the destroy go in sequence, otherwise you get "conflicting operation" errors

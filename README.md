@@ -38,12 +38,9 @@ terraform init
 terraform apply -var-file values
 ```
 
+## Using as a module (non-root module)
 
-## Using as a module
-
-To use this repo as a terraform module, remove provider.tf file or comment out the content in that file. From a top level module, call this repo as a module
-
-### Top level module (In directory at the same level as this repo)
+Create a tf file with the following content
 
 ```hcl
 terraform {
@@ -68,11 +65,13 @@ provider "valtix" {
 module "csp_setup" {
   source                        = "github.com/valtix-security/terraform-aws-setup"
   deployment_name               = "prod1"
-  prefix                        = "valtix"
   controller_aws_account_number = "valtix-aws-account-number"
+  prefix                        = "valtix"
   s3_bucket                     = "valtix-12345"
   object_duration               = 1
   valtix_aws_cloud_account_name = "aws-account-name-on-valtix"
   inventory_regions             = ["us-east-1", "us-east-2"]
 }
 ```
+
+***Note: If you are trying to run this in a loop for multiple accounts (e.g using a bash and terraform workspaces), then make sure you provide a different S3 bucket for each of the runs, like appending a timestamp***

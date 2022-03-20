@@ -10,6 +10,5 @@ valtix_aws_cloud_account_name = "aws-111111"
 # that's calling this module
 
 valtix_api_key_file = "valtix_api_key.json"
-region = "us-west-1"
 aws_credentials_profile = "profilename"
 inventory_regions = ["us-east-1", "us-east-2"]

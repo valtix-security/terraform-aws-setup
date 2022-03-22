@@ -22,6 +22,8 @@ Create IAM roles and prepare your AWS account to enable Valtix Controller access
 * `valtix_controller_role_arn` - IAM Role used by the Valtix Controller to manage the AWS account
 * `valtix_firewall_role_name` - IAM Role used by the Valtix Gateway EC2 instances
 * `valtix_inventory_role_arn` - IAM Role used by EventBridge to push real time inventory updates to the Valtix Controller  
+* `cloud_account_name` - Valtix Cloud Account Name
+* `z_console_urls` - Friendly AWS Console URLs for the IAM roles 
 
 ## Running as root module
 ```

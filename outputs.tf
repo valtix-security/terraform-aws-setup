@@ -17,7 +17,7 @@ output "cloud_account_name" {
 output "z_console_urls" {
   value = {
     controller-role = "https://console.aws.amazon.com/iamv2/home?#/roles/details/${aws_iam_role.valtix_controller_role.name}"
-    firewall-role   = "https://console.aws.amazon.com/iamv2/home?#/roles/details/${aws_iam_role.firewall_role.name}"
-    inventory-role  = "https://console.aws.amazon.com/iamv2/home?#/roles/details/${aws_iam_role.inventory_role.name}"
+    firewall-role   = "https://console.aws.amazon.com/iamv2/home?#/roles/details/${aws_iam_role.valtix_fw_role.name}"
+    inventory-role  = "https://console.aws.amazon.com/iamv2/home?#/roles/details/${aws_iam_role.valtix_inventory_role.name}"
   }
 }

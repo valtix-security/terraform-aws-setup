@@ -34,12 +34,12 @@ resource "aws_iam_role_policy" "valtix_controller_policy" {
           "acm:ListCertificates",
           "apigateway:GET",
           "ec2:*",
+          "elasticloadbalancing:*",
+          "events:DeleteRule",
+          "events:ListTargetsByRule",
           "events:PutRule",
           "events:PutTargets",
-          "events:DeleteRule",
           "events:RemoveTargets",
-          "events:ListTargetsByRule",
-          "elasticloadbalancing:*",
           "iam:ListPolicies",
           "iam:ListRoles",
           "iam:ListRoleTags",
@@ -47,12 +47,7 @@ resource "aws_iam_role_policy" "valtix_controller_policy" {
           "route53resolver:*",
           "servicequotas:GetServiceQuota",
           "s3:ListAllMyBuckets",
-          "s3:ListBucket",
-          "events:PutRule",
-          "events:PutTargets",
-          "events:DeleteRule",
-          "events:RemoveTargets",
-          "events:ListTargetsByRule"
+          "s3:ListBucket"
         ],
         Effect   = "Allow",
         Resource = "*"
@@ -76,7 +71,8 @@ resource "aws_iam_role_policy" "valtix_controller_policy" {
         ],
         Effect = "Allow",
         Resource = [
-          aws_iam_role.valtix_fw_role.arn
+          aws_iam_role.valtix_fw_role.arn,
+          aws_iam_role.valtix_inventory_role.arn
         ]
       },
       {

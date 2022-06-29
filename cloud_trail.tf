@@ -1,5 +1,5 @@
 resource "aws_cloudtrail" "valtix_cloudtrail" {
-  for_each                      = local.s3_bucket
+  for_each                      = local.cloud_trail_s3_bucket
   name                          = "${var.prefix}-cloudtrail"
   s3_bucket_name                = aws_s3_bucket.valtix_s3_bucket[each.key].id
   enable_log_file_validation    = true

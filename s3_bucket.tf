@@ -1,6 +1,11 @@
 locals {
-  # if s3 bucket is not provided then don't create. Use map to make this check and everything else that depends on the s3
+  # if s3 bucket is not provided then don't create. 
+  # Use map to make this check and everything else that depends on the s3
   s3_bucket = { for bkt in [var.s3_bucket] : bkt => "dontcare" if bkt != "" }
+
+  # cloud trail is created if var.create_cloud_trail is true and s3_bucket is not ""
+  # use the same bucket name as above but with an extra condition
+  cloud_trail_s3_bucket = { for bkt in [var.s3_bucket] : bkt => "dontcare" if bkt != "" && var.create_cloud_trail == true }
 }
 
 resource "aws_s3_bucket" "valtix_s3_bucket" {

@@ -7,15 +7,16 @@ Create IAM roles and prepare your AWS account to enable Valtix Controller access
 
 ## Argument Reference
 
-* `valtix_api_key_file` - (Required) Valtix API Key JSON file downloaded from the Valtix Dashboard
 * `deployment_name` - (Required) Valtix Deployment Name provided by Valtix
 * `prefix` - (Required) Prefix added to all the resources created on the AWS account
 * `controller_aws_account_number` - (Required) AWS controller account number provided by Valtix
-* `s3_bucket` - (Optional) S3 bucket name for VPC flow logs and DNS query logs for Valtix Realtime Discovery. Creates all-region CloudTrail to log into this bucket. If empty, then CloudTrail and S3 bucket are not created
-* `object_duration` - (Optional) Number of days after which the objects in the s3 bucket are deleted (default 1 day)
-* `aws_credentials_profile` - (Optional) Required when run as root module. The profile name to use to login to the AWS account
-* `valtix_aws_cloud_account_name` - (Required) Name to use for AWS Account on the Valtix Dashboard (Valtix Controller)
+* `s3_bucket` - (Optional) S3 bucket name to store VPC Flow Logs, DNS Query Logs and optionally CloudTrail events. Set this to empty string if Discovery features are not required. 
+* `object_duration` - (Optional) Number of days after which the objects in the S3 bucket are deleted (Default 1 day)
+* `create_cloud_trail` - (Optional) true/false. Create a new multi-region CloudTrail and log the events to the provided S3 Bucket. S3 Bucket must be provided for this variable to take effect. If you already have a multi-region CloudTrail in your account, set this value to false to not create another CloudTrail. (Default true)
+* `valtix_aws_cloud_account_name` - (Required) Name used to represent this AWS Account on the Valtix Dashboard (Valtix Controller)
 * `inventory_regions` - (Optional) List of AWS regions that Valtix Controller can monitor and update the inventory for dynamic security policies
+* `valtix_api_key_file` - (Optional) Required when run as root module. Valtix API Key JSON file downloaded from the Valtix Dashboard
+* `aws_credentials_profile` - (Optional) Required when run as root module. The profile name to use to login to the AWS account
 
 ## Outputs
 
@@ -71,6 +72,7 @@ module "csp_setup" {
   prefix                        = "valtix"
   s3_bucket                     = "valtix-12345"
   object_duration               = 1
+  create_cloud_trail            = true
   valtix_aws_cloud_account_name = "aws-account-name-on-valtix"
   inventory_regions             = ["us-east-1", "us-east-2"]
 }

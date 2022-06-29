@@ -3,12 +3,14 @@ prefix = "valtix"
 controller_aws_account_number = "111111111111"
 s3_bucket = "valtix-customer-name"
 object_duration = 1
+create_cloud_trail = true
 valtix_aws_cloud_account_name = "aws-111111"
+inventory_regions = ["us-east-1", "us-east-2"]
 
-# following required only when run as root module,
+# following required only when run as root module/standalone,
 # otherwise the providers are already configured at the root module
 # that's calling this module
 
 valtix_api_key_file = "valtix_api_key.json"
+region = "us-east-1"
 aws_credentials_profile = "profilename"
-inventory_regions = ["us-east-1", "us-east-2"]

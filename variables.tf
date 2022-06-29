@@ -15,6 +15,7 @@ variable "deployment_name" {
 
 variable "prefix" {
   description = "Prefix for resources created in this template"
+  default     = "valtix"
 }
 
 variable "controller_aws_account_number" {
@@ -22,7 +23,7 @@ variable "controller_aws_account_number" {
 }
 
 variable "s3_bucket" {
-  description = "Create S3 Bucket to store cloudtrail, route53 query logs and vpc flow logs"
+  description = "Create S3 Bucket to store CloudTrail, Route53 Query Logs and VPC Flow Logs"
   default     = ""
 }
 
@@ -31,13 +32,19 @@ variable "object_duration" {
   default     = 1
 }
 
+variable "create_cloud_trail" {
+  description = "Create a multi region CloudTrail and store the events in the s3_bucket. If you already have a CloudTrail, then provide this value as false"
+  default     = true
+  type        = bool
+}
+
 variable "aws_credentials_profile" {
   description = "AWS Credentials Profile Name, required only when run as root module"
   default     = ""
 }
 
 variable "valtix_aws_cloud_account_name" {
-  description = "Name to use for AWS Account on the Valtix Dashboard (Valtix Controller)"
+  description = "Name used to represent this AWS Account on the Valtix Dashboard"
 }
 
 variable "inventory_regions" {

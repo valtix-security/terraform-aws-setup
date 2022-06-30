@@ -40,6 +40,7 @@ resource "aws_iam_role_policy" "valtix_controller_policy" {
           "events:PutRule",
           "events:PutTargets",
           "events:RemoveTargets",
+          "globalaccelerator:*",
           "iam:ListPolicies",
           "iam:ListRoles",
           "iam:ListRoleTags",

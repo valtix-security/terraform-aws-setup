@@ -6,6 +6,7 @@ resource "time_sleep" "wait_for_controller_account" {
 }
 
 resource "valtix_cloud_account" "aws1" {
+  count = var.valtix_aws_cloud_account_name == "" ? 0 : 1
   depends_on = [
     time_sleep.wait_for_controller_account
   ]

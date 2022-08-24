@@ -20,10 +20,46 @@ Create IAM roles and prepare your AWS account to enable Valtix Controller access
 
 ## Outputs
 
-* `valtix_controller_role_arn` - IAM Role used by the Valtix Controller to manage the AWS account
-* `valtix_firewall_role_name` - IAM Role used by the Valtix Gateway EC2 instances
-* `valtix_inventory_role_arn` - IAM Role used by EventBridge to push real time inventory updates to the Valtix Controller  
-* `cloud_account_name` - Valtix Cloud Account Name
+* `cloud_account_name` - Valtix Cloud Account Name (same as input variable `valtix_aws_cloud_account_name`)
+* `cloud_trail` - Map of CloudTrail name and arn
+    ```
+    {
+      "arn" = "cloud_trail-arn"
+      "name" = "cloud_trail-name"
+    }
+    ```
+* `external_id` - Controller IAM Role external id, this is sensitive. Use `terraform output -json` to get the value. If the cloud account is onboarded in this module, then you don't need this value
+* `s3_bucket` - Map of S3 Bucket name and arn
+    ```
+    {
+      "arn" = "s3_bucket-arn"
+      "name" = "s3_bucket-name"
+    }
+    ```
+* `valtix_controller_role` - Map of Valtix Controller IAM Role's name and arn
+    ```
+    {
+      "arn" = "valtix_controller_role-arn"
+      "name" = "valtix_controller_role-name"
+    }
+    ```
+* `valtix_controller_role_arn` - IAM Role used by the Valtix Controller to manage the AWS account (Backward Compatibility, use the map above for new deployments)
+* `valtix_firewall_role` - Map of Valtix Gateway/Firewall IAM Role's name and arn
+    ```
+    {
+      "arn" = "valtix_firewall_role-arn"
+      "name" = "valtix_firewall_role-name"
+    }
+    ```
+* `valtix_firewall_role_name` - IAM Role used by the Valtix Gateway EC2 instances (Backward Compatibility, use the map above for new deployments)
+* `valtix_inventory_role` - Map of Valtix Inventory IAM Role's name and arn
+    ```
+    {
+      "arn" = "valtix_inventory_role-arn"
+      "name" = "valtix_inventory_role-name"
+    }
+    ```
+* `valtix_inventory_role_arn` - IAM Role used by EventBridge to push real time inventory updates to the Valtix Controller (Backward Compatibility, use the map above for new deployments)
 * `z_console_urls` - Friendly AWS Console URLs for the IAM roles 
 
 ## Running as root module
@@ -67,9 +103,10 @@ provider "valtix" {
 
 module "csp_setup" {
   source                        = "github.com/valtix-security/terraform-aws-setup"
+  # define the values for all the variables (use values-sample as a reference)
   deployment_name               = "prod1"
-  controller_aws_account_number = "valtix-aws-account-number"
   prefix                        = "valtix"
+  controller_aws_account_number = "valtix-aws-account-number"
   s3_bucket                     = "valtix-12345"
   object_duration               = 1
   create_cloud_trail            = true
@@ -77,5 +114,3 @@ module "csp_setup" {
   inventory_regions             = ["us-east-1", "us-east-2"]
 }
 ```
-
-***Note: If you are trying to run this in a loop for multiple accounts (e.g using a bash and terraform workspaces), then make sure you provide a different S3 bucket for each of the runs, like appending a timestamp***

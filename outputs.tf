@@ -10,6 +10,27 @@ output "valtix_firewall_role_name" {
   value = aws_iam_role.valtix_fw_role.name
 }
 
+output "valtix_controller_role" {
+  value = {
+    arn : aws_iam_role.valtix_controller_role.arn
+    name : aws_iam_role.valtix_controller_role.name
+  }
+}
+
+output "valtix_inventory_role" {
+  value = {
+    arn : aws_iam_role.valtix_inventory_role.arn,
+    name : aws_iam_role.valtix_inventory_role.name
+  }
+}
+
+output "valtix_firewall_role" {
+  value = {
+    arn : aws_iam_role.valtix_fw_role.arn,
+    name : aws_iam_role.valtix_fw_role.name
+  }
+}
+
 output "cloud_account_name" {
   value = var.valtix_aws_cloud_account_name
 }
@@ -21,7 +42,7 @@ output "external_id" {
 }
 
 output "s3_bucket" {
-  value = var.s3_bucket
+  value = one([for bkt in aws_s3_bucket.valtix_s3_bucket : { name : bkt.id, arn : bkt.arn }])
 }
 
 output "cloudtrail" {

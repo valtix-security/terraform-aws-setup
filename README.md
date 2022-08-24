@@ -9,12 +9,13 @@ Create IAM roles and prepare your AWS account to enable Valtix Controller access
 
 * `prefix` - (Required) Prefix added to all the resources created on the AWS account
 * `controller_aws_account_number` - (Required) AWS controller account number provided by Valtix
-* `deployment_name` - (Optional) Valtix Deployment Name. Ask Valtix for this information. Default value is `prod1` unless you work with Valtix ffor a custom deployment
+* `deployment_name` - (Optional) Valtix Deployment Name. Ask Valtix for this information. Default value is `prod1` unless you work with Valtix for a custom deployment
 * `s3_bucket` - (Optional) S3 bucket name to store VPC Flow Logs, DNS Query Logs and optionally CloudTrail events. Set this to empty string if Discovery features are not required, default is empty (S3 bucket is NOT created) 
 * `object_duration` - (Optional) Number of days after which the objects in the above S3 bucket are deleted (Default 1 day)
-* `create_cloud_trail` - (Optional) true/false. Create a new multi-region CloudTrail and log the events to the provided S3 Bucket. S3 Bucket must be provided for this variable to take effect. If you already have a multi-region CloudTrail in your account, set this value to false to not create another CloudTrail. (Default true)
+* `create_cloud_trail` - (Optional) true/false. Create a new multi-region CloudTrail and log the events to the provided S3 Bucket. S3 Bucket must be provided for this variable to take effect. If you already have a multi-region CloudTrail in your account, set this value to false to not create another CloudTrail. (Default true and is applicable only if `s3_bucket` is defined)
 * `valtix_api_key_file` - (Optional) Required when run as root module. Valtix API Key JSON file downloaded from the Valtix Dashboard
 * `aws_credentials_profile` - (Optional) Required when run as root module. The profile name to use to login to the AWS account
+* `region` - (Optional) Required when run as root module. AWS Region (Home region for CloudTrail, S3 Bucket)
 * `valtix_aws_cloud_account_name` - (Optional) Name used to represent this AWS Account on the Valtix Controller. If the value is empty, the account is not added. Default is empty
 * `inventory_regions` - (Optional) List of AWS regions that Valtix Controller can monitor and update the inventory for dynamic security policies, this is used only when `valtix_aws_cloud_account_name` is not empty
 
@@ -95,6 +96,7 @@ terraform {
 
 provider "aws" {
   profile = "profilename"
+  region  = "us-east-1"
 }
 
 provider "valtix" {

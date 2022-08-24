@@ -44,7 +44,8 @@ variable "aws_credentials_profile" {
 }
 
 variable "valtix_aws_cloud_account_name" {
-  description = "Name used to represent this AWS Account on the Valtix Dashboard"
+  description = "Name used to represent this AWS Account on the Valtix Dashboard, if this is empty the AWS account is not added to the Valtix Controller"
+  default     = ""
 }
 
 variable "inventory_regions" {

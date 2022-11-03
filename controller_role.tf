@@ -31,6 +31,7 @@ resource "aws_iam_role_policy" "valtix_controller_policy" {
     Statement = [
       {
         Action = [
+          "acm:DescribeCertificate",
           "acm:ListCertificates",
           "apigateway:GET",
           "ec2:*",

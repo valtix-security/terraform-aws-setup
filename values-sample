@@ -4,6 +4,8 @@ controller_aws_account_number = "111111111111"
 s3_bucket = "valtix-customer-name"
 object_duration = 1
 create_cloud_trail = true
+
+# required only if you intend to onboard the account onto the Valtix Controller
 valtix_aws_cloud_account_name = "aws-111111"
 inventory_regions = ["us-east-1", "us-east-2"]
 

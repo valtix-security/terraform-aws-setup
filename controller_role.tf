@@ -36,11 +36,7 @@ resource "aws_iam_role_policy" "valtix_controller_policy" {
           "apigateway:GET",
           "ec2:*",
           "elasticloadbalancing:*",
-          "events:DeleteRule",
-          "events:ListTargetsByRule",
-          "events:PutRule",
-          "events:PutTargets",
-          "events:RemoveTargets",
+          "events:*",
           "globalaccelerator:*",
           "iam:ListPolicies",
           "iam:ListRoles",
@@ -81,6 +77,19 @@ resource "aws_iam_role_policy" "valtix_controller_policy" {
         Action   = "iam:CreateServiceLinkedRole",
         Effect   = "Allow",
         Resource = "arn:aws:iam::*:role/aws-service-role/*"
+      },
+      {
+        Action = [
+          "secretsmanager:CreateSecret",
+          "secretsmanager:UpdateSecret",
+          "secretsmanager:DeleteSecret",
+          "secretsmanager:GetSecretValue",
+          "secretsmanager:PutSecretValue"
+        ],
+        Effect = "Allow",
+        Resource = [
+          "arn:aws:secretsmanager:*:*:secret:events!*"
+        ]
       }
     ]
   })

@@ -9,15 +9,17 @@ Create IAM roles and prepare your AWS account to enable Valtix Controller access
 
 * `prefix` - (Required) Prefix added to all the resources created on the AWS account
 * `controller_aws_account_number` - (Required) AWS controller account number provided by Valtix
+* `valtix_api_key_file` - (Required) Valtix API Key JSON file downloaded from the Valtix Controller. This is used to get the external id from the Valtix Controller that is used in the trust relationship for cross account iam role
 * `deployment_name` - (Optional) Valtix Deployment Name. Ask Valtix for this information. Default value is `prod1` unless you work with Valtix for a custom deployment
 * `s3_bucket` - (Optional) S3 bucket name to store VPC Flow Logs, DNS Query Logs and optionally CloudTrail events. Set this to empty string if Discovery features are not required, default is empty (S3 bucket is NOT created) 
 * `object_duration` - (Optional) Number of days after which the objects in the above S3 bucket are deleted (Default 1 day)
 * `create_cloud_trail` - (Optional) true/false. Create a new multi-region CloudTrail and log the events to the provided S3 Bucket. S3 Bucket must be provided for this variable to take effect. If you already have a multi-region CloudTrail in your account, set this value to false to not create another CloudTrail. (Default true and is applicable only if `s3_bucket` is defined)
-* `valtix_api_key_file` - (Optional) Required when run as root module. Valtix API Key JSON file downloaded from the Valtix Dashboard
-* `aws_credentials_profile` - (Optional) Required when run as root module. The profile name to use to login to the AWS account
-* `region` - (Optional) Required when run as root module. AWS Region (Home region for CloudTrail, S3 Bucket)
 * `valtix_aws_cloud_account_name` - (Optional) Name used to represent this AWS Account on the Valtix Controller. If the value is empty, the account is not added. Default is empty
 * `inventory_regions` - (Optional) List of AWS regions that Valtix Controller can monitor and update the inventory for dynamic security policies, this is used only when `valtix_aws_cloud_account_name` is not empty
+
+### These parameters are required when run as root module (by cloning this code and run), otherwise the parent module would have to set the credentials and region
+* `aws_credentials_profile` - (Optional) Required when run as root module. The profile name to use to login to the AWS account to add the IAM roles as described in this document.
+* `region` - (Optional) Required when run as root module. AWS Region (Home region for CloudTrail, S3 Bucket)
 
 ## Outputs
 
@@ -52,7 +54,6 @@ Create IAM roles and prepare your AWS account to enable Valtix Controller access
       "name" = "valtix_firewall_role-name"
     }
     ```
-* `valtix_firewall_role_name` - IAM Role used by the Valtix Gateway EC2 instances (Backward Compatibility, use the map above for new deployments)
 * `valtix_inventory_role` - Map of Valtix Inventory IAM Role's name and arn
     ```
     {
@@ -60,7 +61,6 @@ Create IAM roles and prepare your AWS account to enable Valtix Controller access
       "name" = "valtix_inventory_role-name"
     }
     ```
-* `valtix_inventory_role_arn` - IAM Role used by EventBridge to push real time inventory updates to the Valtix Controller (Backward Compatibility, use the map above for new deployments)
 * `z_console_urls` - Friendly AWS Console URLs for the IAM roles 
 
 ## Running as root module
@@ -112,6 +112,7 @@ module "csp_setup" {
   s3_bucket                     = "valtix-12345"
   object_duration               = 1
   create_cloud_trail            = true
+  # required only if you intend to onboard the account to the Valtix Controller
   valtix_aws_cloud_account_name = "aws-account-name-on-valtix"
   inventory_regions             = ["us-east-1", "us-east-2"]
 }

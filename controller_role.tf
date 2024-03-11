@@ -46,6 +46,8 @@ resource "aws_iam_role_policy" "valtix_controller_policy" {
           "servicequotas:GetServiceQuota",
           "s3:ListAllMyBuckets",
           "s3:ListBucket"
+          "wafv2:Get*"
+          "wafv2:List*"
         ],
         Effect   = "Allow",
         Resource = "*"

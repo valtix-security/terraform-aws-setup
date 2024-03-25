@@ -24,7 +24,7 @@ Create IAM roles and prepare your AWS account to enable Valtix Controller access
 ## Outputs
 
 * `cloud_account_name` - Valtix Cloud Account Name (same as input variable `valtix_aws_cloud_account_name`)
-* `cloud_trail` - Map of CloudTrail name and arn
+* `cloudtrail` - Map of CloudTrail name and arn
     ```
     {
       "arn" = "cloud_trail-arn"

@@ -47,7 +47,8 @@ resource "aws_iam_role_policy" "valtix_controller_policy" {
           "s3:ListAllMyBuckets",
           "s3:ListBucket",
           "wafv2:Get*",
-          "wafv2:List*"
+          "wafv2:List*",
+          "networkmanager:*"
         ],
         Effect   = "Allow",
         Resource = "*"

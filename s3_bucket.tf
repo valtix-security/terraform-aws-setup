@@ -30,6 +30,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "lifecycle" {
   rule {
     id     = "Delete Objects after ${var.object_duration} days"
     status = "Enabled"
+    filter {}
     expiration {
       days = var.object_duration
     }
